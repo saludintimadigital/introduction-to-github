@@ -1,0 +1,76 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+export default function SaludIntimaDigital() {
+  const [flujo, setFlujo] = useState("");
+  const [picazon, setPicazon] = useState(false);
+  const [dolor, setDolor] = useState(false);
+  const [fiebre, setFiebre] = useState(false);
+  const [multiplesParejas, setMultiplesParejas] = useState(false);
+  const [resultado, setResultado] = useState("");
+
+  const evaluar = () => {
+    if (flujo === "blanco grumoso" && picazon) {
+      setResultado("Posible Candidiasis: consulta médica recomendada.");
+    } else if (flujo === "grisáceo con olor" && !picazon) {
+      setResultado("Posible Vaginosis Bacteriana: consulta médica recomendada.");
+    } else if (flujo === "amarillo verdoso" && dolor) {
+      setResultado("Posible Tricomoniasis: consulta médica recomendada.");
+    } else {
+      setResultado("No se puede determinar: consulta médica sugerida.");
+    }
+  };
+
+  const imagenFlujo = () => {
+    if (flujo === "blanco grumoso") return "/images/blanco_grumoso.jpg";
+    if (flujo === "grisáceo con olor") return "/images/grisaceo_olor.jpg";
+    if (flujo === "amarillo verdoso") return "/images/amarillo_verdoso.jpg";
+    return null;
+  };
+
+  return (
+    <div className="p-4 max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Salud Íntima Digital</h1>
+      <p className="mb-2">Responde las siguientes preguntas para obtener una orientación preliminar:</p>
+      <div className="mb-4">
+        <label className="block mb-1">Características del flujo vaginal:</label>
+        <select className="w-full p-2 border rounded" value={flujo} onChange={(e) => setFlujo(e.target.value)}>
+          <option value="">Selecciona</option>
+          <option value="blanco grumoso">Blanco grumoso</option>
+          <option value="grisáceo con olor">Grisáceo con olor</option>
+          <option value="amarillo verdoso">Amarillo verdoso</option>
+        </select>
+        {imagenFlujo() && (
+          <div className="mt-2">
+            <img src={imagenFlujo()} alt="Ejemplo de flujo" className="rounded shadow w-full" />
+            <p className="text-sm text-center mt-1 italic">Imagen ilustrativa del tipo de flujo seleccionado</p>
+          </div>
+        )}
+      </div>
+      <div className="mb-4 grid grid-cols-1 gap-2">
+        <label className="flex items-center">
+          <input type="checkbox" checked={fiebre} onChange={() => setFiebre(!fiebre)} className="mr-2" /> Tiene fiebre
+        </label>
+        <label className="flex items-center">
+          <input type="checkbox" checked={picazon} onChange={() => setPicazon(!picazon)} className="mr-2" /> Tiene picazón
+        </label>
+        <label className="flex items-center">
+          <input type="checkbox" checked={dolor} onChange={() => setDolor(!dolor)} className="mr-2" /> Dolor al orinar o durante relaciones
+        </label>
+        <label className="flex items-center">
+          <input type="checkbox" checked={multiplesParejas} onChange={() => setMultiplesParejas(!multiplesParejas)} className="mr-2" /> Tiene múltiples parejas sexuales
+        </label>
+      </div>
+      <Button onClick={evaluar}>Evaluar</Button>
+      {resultado && (
+        <Card className="mt-4">
+          <CardContent>
+            <p className="text-lg font-semibold">Resultado:</p>
+            <p>{resultado}</p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
